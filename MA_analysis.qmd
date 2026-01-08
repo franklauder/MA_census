@@ -1,0 +1,122 @@
+---
+title: "Massachusetts Census Analysis"
+format: html
+---
+
+# Introduction
+
+
+# Libraries
+
+
+```{r}
+
+library(tidycensus)
+library(dplyr)
+library(ggplot2)
+library(plotly)
+library(tidyr)
+library(hexbin)
+library(RColorBrewer)
+library(forcats)
+library(crosstalk)
+library(mapview)
+
+library(ggiraph)
+
+library(survey)
+
+library(srvyr)
+
+library(sf)
+
+library(jsonlite)
+
+library(tigris)
+
+library(stringr)
+
+library(leaflet)
+library(htmlwidgets)
+library(htmltools)
+library(gt)
+library(DT)
+
+
+```
+
+
+
+# Importing Census Data
+
+
+```{r}
+
+
+
+
+
+
+```
+
+
+```{r}
+
+
+Sys.getenv("CENSUS_API_KEY")
+
+```
+
+
+```{r}
+
+
+pop_2020<-load_variables(2020,"pl",cache=TRUE)
+
+
+
+```
+
+
+```{r}
+
+
+ma_county_pop <- get_decennial(
+  geography = "county",
+  state = "MA",
+  variables = "P1_001N",
+  year=2020
+)
+
+
+```
+
+
+```{r}
+
+ma_county_pop
+
+
+
+```
+
+
+```{r}
+
+
+saveRDS(ma_county_pop, "ma_county_pop.rds")
+
+
+```
+
+```{r}
+
+
+ma_county_pop <- readRDS("ma_county_pop")
+
+
+```
+
+
+
+
