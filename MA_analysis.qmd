@@ -118,5 +118,82 @@ ma_county_pop <- readRDS("ma_county_pop")
 ```
 
 
+```{r}
+
+
+vlac5<-load_variables(2020,"acs5",cache=TRUE)
+
+
+```
+
+
+```{r}
+
+
+ac5_2125<-load_variables(2021,"acs5",cache=TRUE)
+
+
+
+```
+
+```{r}
+
+ac5_1923 <- load_variables(2019,"acs5",cache=TRUE)
+
+
+
+```
+
+```{r}
+ac5_1923
+
+
+
+```
+
+
+
+```{r}
+
+
+ma_county_median_age <- get_acs(
+    geography = "county",
+    state = "MA",
+    variables = "B01002_001",
+    year=2019
+)
+
+
+```
+
+
+```{r}
+
+
+
+saveRDS(ma_county_median_age,"ma_county_median_age.rds")
+
+
+```
+
+
+```{r}
+
+ma_county_median_age <- readRDS("ma_county_median_age.rds")
+
+
+
+```
+
+```{r}
+
+
+ma_county_median_age
+
+
+
+```
+
+
 
 
