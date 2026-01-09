@@ -41,9 +41,13 @@ library(htmlwidgets)
 library(htmltools)
 library(gt)
 library(DT)
+library(quarto)
+library(purrr)
 
 
 ```
+
+
 
 
 
@@ -72,6 +76,14 @@ Sys.getenv("CENSUS_API_KEY")
 
 
 pop_2020<-load_variables(2020,"pl",cache=TRUE)
+
+
+
+```
+
+```{r}
+
+dec_variable1_2020<-load_variables(2020, "sf1")
 
 
 
@@ -108,6 +120,8 @@ saveRDS(ma_county_pop, "ma_county_pop.rds")
 
 
 ```
+
+
 
 ```{r}
 
@@ -189,6 +203,154 @@ ma_county_median_age <- readRDS("ma_county_median_age.rds")
 
 
 ma_county_median_age
+
+
+
+```
+
+
+```{r}
+
+load_variables(2019, "acs1/profile")
+
+
+```
+
+
+```{r}
+
+ma_college<-get_acs(
+  geography = "county",
+  variables = "DP02_0068P",
+  state="MA",
+  year=2019
+)
+
+
+
+```
+
+```{r}
+
+ma_college
+
+
+
+```
+
+
+```{r}
+
+
+saveRDS(ma_college, "ma_college.rds")
+
+
+
+```
+
+```{r}
+
+ma_college <- readRDS("ma_college.rds")
+
+
+
+```
+
+
+```{r}
+
+college_vars <- c("B15002_015",  "B15002_016",  "B15002_017",  "B15002_018",  "B15002_032",  "B15002_033", "B15002_034",  "B15002_035") 
+
+
+
+
+
+
+
+```
+
+
+```{r}
+
+years <- 2010:2019
+names(years) <- years
+college_by_year <- map_dfr(years, ~{
+  get_acs(
+    geography = "county",
+    variables = college_vars,
+    state="MA",
+    summary_var = "B15002_001",
+    survey="acs1",
+    year = .x
+
+  )
+}, .id="year")
+
+
+
+```
+
+
+```{r}
+
+saveRDS(college_by_year, "college_by_year.rds")
+
+
+```
+
+```{r}
+
+
+college_by_year <- readRDS("college_by_year.rds")
+
+
+```
+
+```{r}
+
+
+college_by_year |> 
+  arrange(NAME, variable,year)
+
+
+```
+
+```{r}
+
+
+percent_college_by_year <- college_by_year |> 
+  group_by(NAME, year) |> 
+  summarise(numerator = sum(estimate),
+  denominator = first(summary_est)) |> 
+  mutate(pct_college = 100 * (numerator / denominator)) |> 
+  pivot_wider(id_cols = NAME,
+              names_from = year,
+              values_from = pct_college)
+
+
+```
+
+
+
+```{r}
+
+saveRDS(percent_college_by_year, "percent_college_by_year.rds")
+
+
+
+```
+
+
+```{r}
+
+
+percent_college_by_year <- readRDS("percent_college_by_year.rds")
+
+```
+
+```{r}
+
+percent_college_by_year
 
 
 
