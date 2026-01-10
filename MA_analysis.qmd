@@ -14,6 +14,7 @@ format: html
 library(tidycensus)
 library(dplyr)
 library(ggplot2)
+library(scales)
 library(plotly)
 library(tidyr)
 library(hexbin)
@@ -88,6 +89,8 @@ dec_variable1_2020<-load_variables(2020, "sf1")
 
 
 ```
+
+# County
 
 
 ```{r}
@@ -358,4 +361,84 @@ percent_college_by_year
 
 
 
+
+
+```{r}
+
+ma_county_incAge_wide<-get_acs(
+  geography = "county",
+  state="Massachusetts",
+  variables = c(medinc="B19013_001",
+                medage="b01002_001" ),
+  output = "wide",
+  year=2023
+)
+
+
+
+```
+
+
+
+
+
+
+
+```{r}
+
+
+ma_county_income <- get_acs(
+  state = "Massachusetts",
+  geography = "county",
+  variables = c(hhincome = "B19013_001"),
+  year = 2023,
+) |> 
+  mutate(NAME = str_remove(NAME, " County, Massachusetts"))
+
+
+
+
+
+```
+
+
+```{r}
+
+ggplot(ma_county_income, aes(x = estimate, y = reorder(NAME, estimate))) +
+  geom_point(size = 3, color = "darkgreen") +
+  labs(title = "Median household income",
+        subtitle = "Counties in Massachusetts",
+        x="",
+        y = "ACS estimate") +
+  theme_minimal(base_size = 12.5)+
+  scale_x_continuous(labels = label_dollar())
+
+
+
+```
+
+```{r}
+
+
+ma_county_income |> 
+  arrange(desc(moe))
+
+```
+
+```{r}
+
+ggplot(ma_county_income, aes(x = estimate, y = reorder(NAME, estimate))) +
+  geom_errorbarh(aes(xmin = estimate - moe, xmax = estimate + moe)) +
+  geom_point(size = 3, color = "darkgreen") +
+  labs(title = "Median household income",
+        subtitle = "Counties in Massachusetts",
+        x = "2019-2023 ACS estimnate",
+        y = "") +
+  theme_minimal(base_size = 12.5)+
+  scale_x_continuous(labels = label_dollar())
+
+
+
+
+```
 
