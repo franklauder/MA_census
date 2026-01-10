@@ -90,6 +90,82 @@ dec_variable1_2020<-load_variables(2020, "sf1")
 
 ```
 
+
+# State 
+
+```{r}
+
+mass <- get_estimates(
+  geography = "state",
+  state = "MA",
+  product = "characteristics",
+  breakdown = c("SEX", "AGEGROUP"),
+  breakdown_labels = TRUE,
+  vintage = 2024
+)
+
+
+
+```
+
+
+```{r}
+
+
+
+mass_filtered <- filter(mass, str_detect(AGEGROUP, "^Age"),
+SEX != "Both sexes") |> 
+  mutate(value = ifelse(SEX == "Male", -value, value))
+
+
+
+
+```
+
+```{r}
+
+mass_filtered
+
+
+
+
+```
+
+
+```{r}
+
+mass_ageSex_payramid <- ggplot(mass_filtered,
+                               aes(x = AGEGROUP,
+                               y = value,
+                               fill = SEX)) +
+  geom_bar(stat = "identity", width = 1) +
+  theme_minimal(base_family = "Verdana") +
+  scale_y_continuous(
+    labels = function(y) paste0(abs(y/ 1000),"k")) +
+    scale_x_discrete(labels = function(x) gsub("Age | years", "", x)) +
+    scale_fill_manual(values = c("darkred", "navy")) +
+    coord_flip() +
+    labs(x = "",
+         y = "2024 Census Bureau population estimate",
+         title = "Population structure in Massachusetts",
+         fill = "",
+         )
+
+
+
+
+```
+
+
+```{r}
+
+
+mass_ageSex_payramid
+
+
+
+```
+
 # County
 
 
@@ -436,6 +512,15 @@ ggplot(ma_county_income, aes(x = estimate, y = reorder(NAME, estimate))) +
         y = "") +
   theme_minimal(base_size = 12.5)+
   scale_x_continuous(labels = label_dollar())
+
+
+
+
+```
+
+
+```{r}
+
 
 
 
