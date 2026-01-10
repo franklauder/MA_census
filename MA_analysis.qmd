@@ -112,12 +112,30 @@ mass <- get_estimates(
 ```{r}
 
 
+saveRDS(mass, "mass.rds")
+
+
+```
+
+
+```{r}
+
+
 
 mass_filtered <- filter(mass, str_detect(AGEGROUP, "^Age"),
 SEX != "Both sexes") |> 
   mutate(value = ifelse(SEX == "Male", -value, value))
 
 
+
+
+```
+
+
+```{r}
+
+
+saveRDS(mass_filtered, "mass_filtered.rds")
 
 
 ```
@@ -160,7 +178,7 @@ mass_ageSex_payramid <- ggplot(mass_filtered,
 ```{r}
 
 
-mass_ageSex_payramid
+ggplotly(mass_ageSex_payramid)
 
 
 
@@ -455,6 +473,15 @@ ma_county_incAge_wide<-get_acs(
 ```
 
 
+```{r}
+
+
+saveRDS(ma_county_incAge_wide, "ma_county_incAge_wide.rds")
+
+
+```
+
+
 
 
 
@@ -473,6 +500,15 @@ ma_county_income <- get_acs(
 
 
 
+
+
+```
+
+
+```{r}
+
+
+saveRDS(ma_county_income, "ma_county_income.rds")
 
 
 ```
@@ -527,3 +563,227 @@ ggplot(ma_county_income, aes(x = estimate, y = reorder(NAME, estimate))) +
 
 ```
 
+# Tract
+
+```{r}
+
+
+
+suffolk_bachelors <- get_acs(
+  geography = "tract",
+  variables = "DP02_0068P",
+  year = 2023,
+  state = "MA",
+  county = "Suffolk",
+  geometry = TRUE
+)
+
+
+```
+
+
+```{r}
+
+
+saveRDS(suffolk_bachelors, "suffolk_bachelors.rds")
+
+
+```
+
+```{r}
+
+
+mapview(suffolk_bachelors, zcol="estimate")
+
+
+```
+
+
+
+```{r}
+
+
+
+
+middlesex_bachelors <- get_acs(
+  geography = "tract",
+  variables = "DP02_0068P",
+  year = 2023,
+  state = "MA",
+  county = "Middlesex",
+  geometry = TRUE
+)
+
+
+```
+
+
+```{r}
+
+
+saveRDS(middlesex_bachelors, "middlesex_bachelors.rds")
+
+
+```
+
+
+```{r}
+
+
+mapview(middlesex_bachelors, zcol="estimate")
+
+```
+
+
+```{r}
+
+
+
+norfolk_bachelors <- get_acs(
+  geography = "tract",
+  variables = "DP02_0068P",
+  year = 2023,
+  state = "MA",
+  county = "Norfolk",
+  geometry = TRUE
+)
+
+
+```
+
+```{r}
+
+
+saveRDS(norfolk_bachelors, "norfolk_bachelors.rds")
+
+
+```
+
+```{r}
+
+
+mapview(norfolk_bachelors, zcol="estimate")
+
+
+```
+
+
+```{r}
+
+
+dukes_bachelors <- get_acs(
+  geography = "tract",
+  variables = "DP02_0068P",
+  year = 2023,
+  state = "MA",
+  county = "Dukes",
+  geometry = TRUE
+)
+
+
+
+```
+
+
+```{r}
+
+
+
+saveRDS(dukes_bachelors, "dukes_bachelors.rds")
+
+
+```
+
+
+
+
+```{r}
+
+
+
+mapview(dukes_bachelors, zcol="estimate")
+
+
+```
+
+
+
+
+
+```{r}
+
+worcester_bachelors <- get_acs(
+  geography = "tract",
+  variables = "DP02_0068P",
+  year = 2023,
+  state = "MA",
+  county = "Worcester",
+  geometry = TRUE
+)
+
+
+
+```
+
+
+
+```{r}
+
+
+
+saveRDS(worcester_bachelors, "worcester_bachelors.rds")
+
+
+```
+
+
+
+```{r}
+
+
+mapview(worcester_bachelors, zcol="estimate")
+
+
+
+```
+
+
+
+
+```{r}
+
+
+
+hampshire_bachelors <- get_acs(
+  geography = "tract",
+  variables = "DP02_0068P",
+  year = 2023,
+  state = "MA",
+  county = "Hampshire",
+  geometry = TRUE
+)
+
+
+```
+
+
+
+```{r}
+
+
+
+saveRDS(hampshire_bachelors, "hampshire_bachelors.rds")
+
+
+```
+
+
+
+```{r}
+
+
+
+mapview(hampshire_bachelors, zcol="estimate")
+
+
+```
