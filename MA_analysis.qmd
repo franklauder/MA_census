@@ -270,6 +270,13 @@ ma_county_pop_plot
 
 ```
 
+```{r}
+
+ggplotly(ma_county_pop_plot)
+
+
+```
+
 
 ```{r}
 
@@ -614,6 +621,26 @@ ma_income <- get_acs(
 
 ```{r}
 
+saveRDS(ma_income, "ma_income.rds")
+
+
+```
+
+```{r}
+
+
+ma_income <- readRDS("ma_income.rds")
+
+
+```
+
+
+
+
+
+
+```{r}
+
 
 ma_map <- ggplot(ma_income, aes(fill = estimate)) +
   geom_sf_interactive(aes(data_id = GEOID)) +
@@ -623,6 +650,24 @@ ma_map <- ggplot(ma_income, aes(fill = estimate)) +
   theme_void()
 
 
+
+
+```
+
+
+```{r}
+
+saveRDS(ma_map, "ma_map.rds")
+
+
+
+```
+
+
+```{r}
+
+
+ma_mp <- readRDS("ma_map.rds")
 
 
 ```
@@ -648,6 +693,23 @@ ma_plot <- ggplot(ma_income, aes(x = estimate, y = reorder(NAME, estimate),fill 
 
 ```
 
+```{r}
+
+
+saveRDS(ma_plot, "ma_plot.rds")
+
+
+```
+
+
+```{r}
+
+
+ma_plot <- readRDS("ma_plot.rds")
+
+
+```
+
 
 ```{r}
 
@@ -662,6 +724,54 @@ girafe(ggobj = ma_map + ma_plot, width_svg = 10, height_svg = 5) |>
 
 
 The wide error bars for Nantucket and Duke counties are probably duie to their small populations.  Reference the county population plot for a comparison. 
+
+```{r}
+
+
+suffolk_flows <- get_flows(
+  geography = "county",
+  state = "MA",
+  county = "Suffolk",
+  geometry = TRUE
+)
+
+
+
+```
+
+```{r}
+
+saveRDS(suffolk_flows, "suffolk_flows.rds")
+
+
+
+```
+
+```{r}
+
+
+suffolk_outflow <- get_flows(
+  geography = "county",
+  state = "MA",
+  county = "Suffolk",
+  geometry = TRUE
+) |> 
+filter(variable == "MOVEDOUT")  |> 
+na.omit() |> 
+arrange(estimate)
+
+
+
+```
+
+
+```{r}
+
+
+suffolk_outflow
+
+
+```
 
 # Tract
 
