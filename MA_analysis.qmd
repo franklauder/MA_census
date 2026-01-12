@@ -365,6 +365,15 @@ load_variables(2019, "acs1/profile")
 
 ```{r}
 
+
+
+
+
+```
+
+
+```{r}
+
 ma_college<-get_acs(
   geography = "county",
   variables = "DP02_0068P",
@@ -724,6 +733,109 @@ girafe(ggobj = ma_map + ma_plot, width_svg = 10, height_svg = 5) |>
 
 
 The wide error bars for Nantucket and Duke counties are probably duie to their small populations.  Reference the county population plot for a comparison. 
+
+
+
+```{r}
+
+
+
+ma_county_home_value <- get_acs(
+  geography = "county",
+  variables = "B25077_001",
+  state = "MA",
+  survey = "acs1",
+  year = 2023,
+  geometry = TRUE
+)
+
+
+
+```
+
+
+```{r}
+
+
+saveRDS(ma_county_home_value, "ma_county_home_value.rds")
+
+
+```
+
+
+
+
+
+```{r}
+
+ma_home_map <- ggplot(ma_county_home_value, aes(fill = estimate)) +
+  geom_sf_interactive(aes(data_id = GEOID)) +
+  scale_fill_distiller(palette = "Blues",
+                       direction = 1,
+                       guide = 'none') +
+  theme_void()
+
+
+
+```
+
+
+```{r}
+
+saveRDS(ma_home_map, "ma_home_map.rds")
+
+
+
+```
+
+
+```{r}
+
+
+ma_home_plot <- ggplot(ma_county_home_value, aes(x = estimate, y = reorder(NAME, estimate),fill = estimate)) +
+  geom_errorbar(aes(xmin = estimate -moe, xmax = estimate + moe)) +
+  geom_point_interactive(color = "black", size = 4, shape = 21, aes(data_id = GEOID)) +
+  scale_fill_distiller(palette = "Blues", direction = 1, labels = label_dollar()) +
+  scale_x_continuous(labels = label_dollar()) +
+  labs(title = "Median home value by county in Massachusetts",
+       subtitle = "2019-2023 American Community Survey",
+       y = "",
+       x = "ACS estimate (bars represent margin of error)",
+       fill = "ACS estimate") +
+  theme_minimal(base_size = 14)
+
+
+
+
+```
+
+
+```{r}
+
+saveRDS(ma_home_plot, "ma_home_plot.rds")
+
+
+
+```
+
+
+```{r}
+
+
+girafe(ggobj = ma_home_map + ma_home_plot, width_svg = 10, height_svg = 5) |> 
+  girafe_options(opts_hover(css = "fill:cyan;"))
+
+
+```
+
+
+```{r}
+
+
+ma_county_home_value
+
+
+```
 
 ```{r}
 
