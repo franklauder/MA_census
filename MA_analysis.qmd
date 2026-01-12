@@ -24,7 +24,7 @@ library(crosstalk)
 library(mapview)
 library(patchwork)
 library(ggiraph)
-
+library(mapdeck)
 library(survey)
 
 library(srvyr)
@@ -758,7 +758,24 @@ suffolk_outflow <- get_flows(
 ) |> 
 filter(variable == "MOVEDOUT")  |> 
 na.omit() |> 
-arrange(estimate)
+arrange(desc(estimate))
+
+
+
+```
+
+
+```{r}
+
+suffolk_inflow <- get_flows(
+  geography = "county",
+  state = "MA",
+  county = "Suffolk",
+  geometry = TRUE
+) |> 
+  na.omit() |> 
+  arrange(desc(estimate))
+
 
 
 
@@ -769,6 +786,49 @@ arrange(estimate)
 
 
 suffolk_outflow
+
+
+```
+
+
+
+```{r}
+
+
+set_token(token)
+
+```
+
+```{r}
+
+
+
+suffolk_outflow |> 
+  slice_max(estimate, n= 30) |> 
+  mutate(weight = estimate / 500) |> 
+  mapdeck(token = token) |> 
+  add_arc(origin = "centroid1",
+          destination = "centroid2",
+          stroke_width = "weight",
+          update_view = FALSE)
+
+
+
+
+```
+
+
+```{r}
+
+suffolk_inflow |> 
+  slice_max(estimate, n= 30) |> 
+  mutate(weight = estimate / 500) |> 
+  mapdeck(token = token) |> 
+  add_arc(origin = "centroid2",
+          destination = "centroid1",
+          stroke_width = "weight",
+          update_view = FALSE)
+
 
 
 ```
